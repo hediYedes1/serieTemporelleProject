@@ -1,0 +1,48 @@
+2️⃣ Ajustement des stocks (Inventory adjustment) 📦
+
+Les entreprises pharmaceutiques peuvent :
+
+produire beaucoup avant la fin de l’année
+utiliser ces stocks en janvier et février
+
+Donc la production baisse temporairement.
+
+Exemple réel :
+
+Une entreprise fabrique beaucoup de médicaments en novembre–décembre pour répondre à la demande hivernale.
+
+3️⃣ Redémarrage industriel en début d’année 🏭
+
+En janvier :
+
+planification de production
+maintenance des machines
+nouvelles stratégies commerciales
+
+La production reprend progressivement en mars–avril.
+
+4️⃣ Demande du marché 💊
+
+Certaines demandes pharmaceutiques augmentent après l’hiver :
+
+nouveaux traitements
+campagnes médicales
+distribution hospitalière
+
+Donc les entreprises augmentent la production après février.
+
+📊 Interprétation statistique que tu peux écrire dans ton rapport
+
+Tu peux écrire quelque chose comme :
+
+L’analyse de la saisonnalité montre que les niveaux de production sont relativement faibles durant les mois de janvier et février. Cette situation peut être expliquée par les effets des fêtes de fin d’année, les ajustements de stocks ainsi que le redémarrage progressif de l’activité industrielle au début de l’année. À partir du mois de mars, la production augmente progressivement, ce qui traduit une reprise de l’activité industrielle.
+
+💡 Petit conseil pour ton projet :
+si tu veux impressionner le prof, tu peux aussi ajouter ce graphique très utilisé en analyse saisonnière :
+
+seasonplot(ts_data,
+           col="blue",
+           year.labels=TRUE,
+           main="Seasonal pattern of pharmaceutical production")
+
+Ce graphique montre l’évolution des mois pour chaque année, et il rend la saisonnalité beaucoup plus visible.

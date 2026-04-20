@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Projet 1 - Serie Temporelle USA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .project-shell {
+      padding: 1.2rem 6vw 2rem;
+    }
+
+    .project-top {
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 1rem;
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.13), rgba(255, 255, 255, 0.06));
+      padding: 1rem;
+      backdrop-filter: blur(8px);
+      margin-bottom: 1rem;
+    }
+
+    .top-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 0.9rem;
+    }
+
+    .top-actions a {
+      color: var(--text);
+      text-decoration: none;
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      padding: 0.45rem 0.8rem;
+      border-radius: 0.6rem;
+    }
+
+    .report-frame-wrap {
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 1rem;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.05);
+      box-shadow: var(--shadow);
+    }
+
+    .report-frame {
+      width: 100%;
+      height: 84vh;
+      border: 0;
+      background: #ffffff;
+    }
+
+    .note {
+      color: var(--muted);
+      margin-top: 0.8rem;
+      font-size: 0.92rem;
+    }
+
+    @media (max-width: 720px) {
+      .project-shell {
+        padding: 1rem;
+      }
+
+      .report-frame {
+        height: 78vh;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-orb orb-1" aria-hidden="true"></div>
+  <div class="bg-orb orb-2" aria-hidden="true"></div>
+  <div class="grid-overlay" aria-hidden="true"></div>
+
+  <main class="project-shell">
+    <section class="project-top">
+      <p class="kicker">Projet 1</p>
+      <h1>Production pharmaceutique USA</h1>
+      <p class="lead">
+        Cette page affiche le rapport complet avec toutes les operations du R Markdown
+        et toutes les visualisations generees.
+      </p>
+
+      <div class="top-actions">
+        <a href="index.html">Retour accueil</a>
+        <a href="ProjetSerieTemporelleCopie.html" target="_blank" rel="noopener">Ouvrir le rapport dans un nouvel onglet</a>
+        <a href="projet1.rmd" target="_blank" rel="noopener">Voir le source Rmd</a>
+        <a href="USA.xlsx" target="_blank" rel="noopener">Telecharger les donnees</a>
+      </div>
+    </section>
+
+    <section class="report-frame-wrap" aria-label="Rapport complet du projet 1">
+      <iframe class="report-frame" src="ProjetSerieTemporelleCopie.html" title="Rapport Projet 1"></iframe>
+    </section>
+
+    <p class="note">
+      Si le rapport ne s affiche pas dans le cadre, utilise le bouton "Ouvrir le rapport dans un nouvel onglet".
+    </p>
+  </main>
+</body>
+</html>

@@ -1,0 +1,497 @@
+---
+title: "Projet2SerieTemporelle"
+author: "mohamedhediyedes"
+date: "2026-04-20"
+output: html_document
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(readxl)
+library(forecast)
+library(tseries)
+library(stats)
+```
+
+# Phase 1. Analyse exploratoire
+
+# 1. Importation des données
+
+```{r}
+data <- read_excel(
+  "IndustrialProduction.xlsx",
+  skip = 10   # 👈 très important (à ajuster)
+)
+
+print(head(data))
+print(colnames(data))
+
+```
+
+**Interpretation :**
+Les donnees sont correctement importees et correspondent a une serie temporelle liee a la production pharmaceutique aux Etats-Unis.
+
+---
+
+## 2. Construction de la serie temporelle
+
+```{r}
+ts_data <- ts(data$IPB53122N, start = c(2009,1), frequency = 12)
+ts_data
+```
+
+**Interpretation :**
+La serie est mensuelle (12 observations par an) et debute en janvier 2009.
+
+---
+
+## 3. Visualisation de la serie
+
+```{r}
+plot(ts_data,
+     main = "Industrial Production",
+     ylab = "Index",
+     xlab = "Temps",
+     col = "blue",
+     lwd = 2)
+```
+
+**Interpretation :**
+Le graphique met en evidence une tendance globale croissante et une composante saisonniere visible. L'amplitude semble augmenter avec le niveau de la serie. Les deux droite qui passe l'une par les minimum de la serie et l'autre par les maximums semblent parrallele alors c'est probablement la decomposition additive
+
+
+---
+
+## 4. Statistiques descriptives
+
+```{r}
+summary(ts_data)
+mean(ts_data)
+sd(ts_data)
+var(ts_data)
+```
+
+**Interpretation :**
+Ces statistiques fournissent un premier resume de la position, de la dispersion et de la variabilite de la serie.
+---
+
+## 5. Décomposition de la série
+
+```{r}
+t <- seq_along(ts_data)
+decadd <- decompose(ts_data, type = "additive")
+decmult <- decompose(ts_data, type = "multiplicative")
+plot(decadd)
+plot(decmult)
+```
+
+**Interprétation :**  
+La serie est decomposee en tendance, saisonnalite et residu. On observe une tendence croissante et presqueùent lineaire et une saisonnalite importante 
+
+---
+
+## 6. ACF des residus de decomposition
+
+```{r}
+par(mfrow = c(1,2))
+
+acf(decadd$random,
+    lag.max = 20,
+    type = "correlation",
+    plot = TRUE,
+    col = "red",
+    main = "ACF résidus - Additif",
+    na.action=na.pass)
+acf(decmult$random,
+    lag.max = 20,
+    type = "correlation",
+    plot = TRUE,
+    col = "red",
+    main = "ACF résidus - Multiplicatif",
+    na.action=na.pass)
+```
+
+**Interprétation :**  
+Le correlogramme des residus additif presente en general moins d'autocorrelation que celui du modele multiplicatif, ce qui renforce le choix d'une structure additive.
+
+---
+
+## 7. ACF et PACF de la serie brute
+
+```{r}
+par(mfrow=c(1,2))
+
+acf(ts_data)
+pacf(ts_data)
+```
+
+**Interprétation :**  
+La decroissance lente de l'ACF indique une non-stationnarite (presence de tendance). La structure periodique observee soutient egalement l'existence d'une composante saisonniere.
+
+---
+
+## 8. Lag plots (dependance temporelle)
+
+```{r}
+lag.plot(ts_data,
+         set.lags = c(1:5, 12),
+         layout = c(3, 2),
+         col = "blue",
+         do.lines = FALSE)
+```
+
+**Interprétation :**  
+Les nuages retardes montrent une dependance temporelle nette entre la serie et ses retards, en particulier au retard 12, ce qui est coherent avec une saisonnalite mensuelle.
+
+---
+
+## 9. Saisonnalite mensuelle
+
+```{r}
+par(mfrow = c(1, 2))
+
+boxplot(ts_data ~ cycle(ts_data),
+        main="Saisonnalité mensuelle",
+        xlab="Mois",
+        ylab="Index")
+
+mean_month = tapply(ts_data, cycle(ts_data), mean)
+
+plot(mean_month,
+     col="red",
+     main="Moyenne mensuelle")
+
+lines(mean_month, col="blue")
+```
+
+**Interprétation :**  
+On contate que Les mois de septembre (93.31) et décembre (92.52) présentent les indices les plus élevés. En revanche, février (78.43), janvier (79.73) et avril (78.64) affichent les valeurs les plus faibles.
+
+---
+
+# 10. Tests de stationnarité
+
+```{r}
+adf.test(ts_data)
+```
+
+**Interprétation :**  
+Si la p-value est superieure a 0.05, on ne rejette pas l'hypothese nulle de non-stationnarite: la serie doit etre transformee (par exemple detrendance et/ou differenciation).
+notre p_value = 0.4313
+
+---
+
+# Phase 2. Modelisation de la tendance et de la saisonnalite
+
+---
+
+## 1. Ajustement de la tendance
+
+---
+
+### 1.1. Moyenne mobile
+
+```{r}
+MMC12 <- filter(ts_data, filter = rep(1/12, 12), method = "convolution", sides = 2)
+plot(ts_data, col="blue", lwd=1)
+lines(MMC12, col="green", lwd=2)
+legend(x="topleft",legend=c("ST", "MMC12"), text.col=c("blue","green"),
+pch=c(16,16), col=c("blue","green"))
+```
+
+**Interprétation :**  
+La moyenne mobile lisse la serie et facilite la lecture de la tendance de fond.
+
+---
+
+### 1.2. Regression lineaire
+
+```{r}
+modelRL <- lm(ts_data ~ t)
+summary(modelRL)
+```
+
+**Interprétation :**  
+Le modele lineaire capte une tendance globale simple. La significativite des coefficients se juge a partir des p-values du resume du modele.
+
+---
+
+### 1.3. Regression polynomiale de degre 2
+
+```{r}
+modelPoly2 <- lm(ts_data ~ t + I(t^2))
+summary(modelPoly2)
+```
+
+**Interprétation :**  
+Le terme quadratique permet une courbure de la tendance, donc un ajustement potentiellement plus flexible que le modele lineaire.
+
+---
+
+## 2. Comparaison visuelle des tendances
+
+```{r}
+par(mfrow=c(1,1))
+
+x_time <- as.numeric(time(ts_data))
+y_data <- as.numeric(ts_data)
+
+### Série brute avec les différentes tendances
+plot(x_time,
+     y_data,
+     type="l",
+     col="blue",
+     main="Comparaison des tendances",
+     ylab="Index",
+     xlab="Temps")
+
+lines(x_time,
+     as.numeric(fitted(modelRL)),
+      col="red",
+      lwd=2)
+
+lines(x_time,
+     as.numeric(fitted(modelPoly2)),
+      col="purple",
+      lwd=2)
+
+legend("topleft",legend = c("ST", "RL", "RP2"),col = c("blue","red","purple"),lwd = 2)
+
+cor(ts_data, fitted(modelRL))
+cor(ts_data, fitted(modelPoly2))
+
+```
+
+**Interprétation :**  
+Dans le modele linéaire est ajusté sur la série brute et tente d’expliquer simultanément la tendance et la variabilité saisonnière et conduit mécaniquement à un coefficient de détermination relativement  (𝑅2 = 0.9331). 
+
+Dans le modele polynomial de degres 2 est ajusté sur la série brute et tente
+d’expliquer simultanément la tendance et la variabilité saisonnière et conduit mécaniquement à un coefficient de détermination relativement  (𝑅2 = 0.9638). 
+
+on choisis le modele ayant le r_squared la plus grande alors le meilleur modele est le polynomial de degres 2
+
+
+---
+
+## 3. Estimation de la saisonnalite apres retrait de la tendance
+
+### 3.1. Cas de la regression lineaire
+
+```{r}
+saisonnaliteResidusRL <- ts_data - fitted(modelRL)
+
+saisonnaliteResidusRLstd <- as.numeric(scale(saisonnaliteResidusRL))
+saisonnaliteResidusRLstd <- ts(saisonnaliteResidusRLstd,
+                               start = start(ts_data),
+                               frequency = frequency(ts_data))
+
+t_time <- as.numeric(time(ts_data))
+
+
+modeleSaisRL <- lm(saisonnaliteResidusRLstd ~
+                     cos(2*pi*t_time/12) + cos(4*pi*t_time/12) +
+                     sin(2*pi*t_time/12) + sin(4*pi*t_time/12))
+
+summary(modeleSaisRL)
+
+plot(saisonnaliteResidusRLstd, col="blue", ylab="V1")
+points(time(ts_data), fitted(modeleSaisRL), type="l", col="red", lwd=2)
+legend(x="topleft",legend=c("TST", "Saisonnalité"),
+text.col=c("blue","red"),
+pch=c(16,16), col=c("blue","red"))
+```
+
+**Interprétation :**  
+La composante saisonniere harmonique reproduit une partie de la variabilite periodique apres retrait de la tendance lineaire.
+
+---
+
+### 3.2. Cas de la regression polynomiale degre 2
+
+```{r}
+saisonnaliteResidusPoly2 <- ts_data - fitted(modelPoly2)
+
+saisonnaliteResidusPoly2std <- as.numeric(scale(saisonnaliteResidusPoly2))
+saisonnaliteResidusPoly2std <- ts(saisonnaliteResidusPoly2std,
+                                  start = start(ts_data),
+                                  frequency = frequency(ts_data))
+
+modeleSaispoly2 <- lm(saisonnaliteResidusPoly2std ~
+                        cos(2*pi*t_time/12) + cos(4*pi*t_time/12) +
+                        sin(2*pi*t_time/12) + sin(4*pi*t_time/12))
+
+summary(modeleSaispoly2)
+
+plot(saisonnaliteResidusPoly2std, col="blue", ylab="V1")
+points(time(ts_data), fitted(modeleSaispoly2), type="l", col="red", lwd=2)
+legend(x="topleft", legend=c("TST", "Saisonnalité"),
+       text.col=c("blue","red"),
+       pch=c(16,16), col=c("blue","red"))
+```
+
+**Interprétation :**  
+La saisonnalite est estimee de la meme facon apres retrait de la tendance quadratique, ce qui permet de comparer les residus entre modeles.
+
+---
+
+### 3.3. Comparaison des deux modeles 
+
+```{r}
+AIC(modeleSaisRL, modeleSaispoly2)
+```
+
+**Interprétation :**  
+modeleSaisRL     6 514.6517
+modeleSaispoly2  6 506.6962
+-> on choisit le modele polynomial de degres 2
+
+---
+
+### 3.4. Comparaison tendance + saisonnalité
+
+```{r}
+cor(ts_data, fitted(modeleSaispoly2) + fitted(modelPoly2))
+```
+
+**Interprétation :**  
+correlation importante : 0.9824239
+---
+
+## 4. Analyse des residus apres retrait de la saisonnalite
+
+### 4.1. Residus du modele lineaire
+
+```{r}
+Z3 = saisonnaliteResidusRLstd - fitted(modeleSaisRL)
+par(mfrow = c(1,2))
+plot.ts(Z3, xlab="time",ylab=" Z1 ", lwd = 2,
+main="Composante résiduelle", col="blue")
+acf(Z3, lag.max = 20, type = c("correlation"),
+plot = TRUE, col="red", main = "Z3", lwd = 2,
+na.action = na.pass)
+
+```
+
+**Interprétation :**  
+Si des pics significatifs apparaissent dans l'ACF, les residus conservent une structure temporelle.
+
+---
+
+### 4.2. Residus du modele polynomial degre 2
+
+```{r}
+Z4 = saisonnaliteResidusPoly2std - fitted(modeleSaispoly2)
+par(mfrow = c(1,2))
+plot.ts(Z4, xlab="time", ylab=" Z4 ", lwd = 2,
+main="Composante résiduelle", col="blue")
+acf(Z4, lag.max = 20, type = "correlation",
+plot = TRUE, col="red", main = "Z4", lwd = 2,
+na.action = na.pass)
+```
+
+**Interprétation :**  
+Le correlogramme permet de verifier si le modele a bien capture la dependance temporelle principale.
+
+---
+
+## 5. Test de stationnarite des residus (Z4)
+
+```{r}
+test = adf.test(Z4)
+test
+```
+
+**Interprétation :**  
+La p-valeur est inférieure à 0.05, on rejette H0 de non-stationnarité,
+ce qui confirme que Z4 est stationnaire. 
+
+---
+
+**Finalement, on teste si la série résiduelle correspond à un bruit blanc. Pour ce faire, on peut procéder de deux manières :**
+
+1. On trace la fonction d’autocorrélation (ACF) et on vérifie l’absence d’autocorrélation significative.
+2. On applique le test de Ljung-Box en utilisant la commande Box.test()
+
+---
+
+## 6. Verification du bruit blanc sur Z4 (serie residuelle stationnaire)
+
+```{r}
+acf(Z4, lag.max=20, col='red', main="ACF de la série résiduelle", lwd=2)
+
+testB = Box.test(Z4, lag=20, type = "Ljung-Box")
+testB
+```
+
+**Interprétation :**  
+L’ACF montre une autocorrélation, et le test de Ljung-Box, avec une p-valeur inférieure à 0.05, indique que la série n’est pas un bruit blanc. La série résiduelle présente encore une structure, ce qui indique que toute l’information n’a pas été capturée.Il convient donc de modéliser la série stationnaire obtenue à l’aide d’un modèle ARMA
+
+---
+
+# Phase 3. Modelisation ARIMA et prevision
+
+## 1. Identification automatique du modele
+
+```{r}
+ARIMA = auto.arima(Z4, d=0, D=0, seasonal=FALSE, trace=TRUE)
+```
+
+**Interprétation :**  
+selon le test de ARMA on a trouver que le meilleur model est : ARIMA(2,0,4) with zero mean
+
+---
+
+## 2. Estimation du modele retenu et diagnostics
+
+```{r}
+ARMA = Arima(Z4, order = c(2,0,4), include.mean = FALSE)
+summary(ARMA)
+par(mfrow=c(1, 2))
+
+### Diagnostic du modele ARIMA
+acf(residuals(ARMA), lag.max = 20, type = "correlation", plot = TRUE, col="red")
+pacf(residuals(ARMA), lag.max = 20, plot = TRUE, col="red")
+
+
+# Tracé de la serie et de l'ajustement
+plot(Z4, xlab="Time", ylab="Z4",main="Série résiduelle",col="blue", lwd=1, type="l")
+lines(fitted(ARMA), col="red", lwd=1)
+# Ajouter la légende
+legend("topleft",
+legend = c("Z4 originale", "Z4 estimée"),
+col = c("blue", "red"),
+lwd = 2,
+bg = "gray90")
+
+testBox = Box.test(residuals(ARMA), lag = 24, type = "Ljung-Box", fitdf = 6)
+testBox
+
+testJB = jarque.bera.test(residuals(ARMA))
+testJB
+
+checkresiduals(ARMA)
+```
+
+**Interprétation :**  
+Après l’estimation du modèle ARIMA, plusieurs outils de diagnostic ont été utilisés afin d’évaluer la qualité de l’ajustement du modèle.
+
+Tout d’abord, l’analyse des fonctions d’autocorrélation (ACF) et d’autocorrélation partielle (PACF) des résidus montre la présence de certaines autocorrélations significatives. Cela signifie que les résidus ne sont pas totalement indépendants et qu’il subsiste encore une structure temporelle non capturée par le modèle.
+
+Ensuite, le test de Ljung-Box appliqué aux résidus fournit une p-valeur inférieure au seuil de signification de 5 %. On rejette donc l’hypothèse nulle d’absence d’autocorrélation, ce qui indique que les résidus ne correspondent pas à un bruit blanc.
+
+Par ailleurs, le test de Jarque-Bera permet d’évaluer la normalité des résidus. La p-valeur obtenue étant également inferieur à 0,05, l’hypothèse de normalité des résidus est rejete .
+
+Ainsi, l’ensemble des diagnostics (ACF, PACF, test de Ljung-Box et test de Jarque-Bera) montre que les résidus du modèle ARIMA estimé ne se comportent pas comme un bruit blanc. Cela signifie que le modèle ne capture pas entièrement la dynamique de la série temporelle et qu’une amélioration du modèle pourrait être envisagée.
+
+---
+
+## 3. Previsions a 12 periodes
+
+```{r}
+prev = forecast(ARMA, h = 12)
+plot(prev, type = "l", col = "red", lwd = 2,
+     main = "Prévisions ARMA", xlab = "Temps", ylab = "Valeur")
+```
+
+**Interprétation :**  
+Le graphique presente les previsions a court terme ainsi que les intervalles d'incertitude associes.

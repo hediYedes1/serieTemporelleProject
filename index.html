@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portfolio - Series Temporelles</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="bg-orb orb-1" aria-hidden="true"></div>
+  <div class="bg-orb orb-2" aria-hidden="true"></div>
+  <div class="grid-overlay" aria-hidden="true"></div>
+
+  <header class="hero" id="top">
+    <nav class="top-nav">
+      <a class="logo" href="#top">Data TimeLab</a>
+      <div class="nav-links">
+        <a href="#projects">Projets</a>
+        <a href="#files">Fichiers</a>
+        <a href="#about">A propos</a>
+      </div>
+    </nav>
+
+    <div class="hero-content reveal" style="--delay: 0s">
+      <p class="kicker">Portfolio analytique</p>
+      <h1>Deux projets complets de series temporelles, reunis dans un seul site web.</h1>
+      <p class="lead">
+        Ce site presente les etudes, les methodes et les resultats de modelisation
+        sur des donnees industrielles mensuelles.
+      </p>
+      <a class="cta" href="#projects">Voir les projets</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="section" id="projects">
+      <div class="section-head reveal" style="--delay: 0.1s">
+        <p class="kicker">Projets</p>
+        <h2>Analyse + modelisation + prevision</h2>
+      </div>
+
+      <div class="project-grid">
+        <article class="project-card reveal" style="--delay: 0.15s">
+          <p class="tag">Projet 1</p>
+          <h3>Production pharmaceutique USA</h3>
+          <p>
+            Etude d une serie mensuelle (debut 1992) avec decomposition,
+            tendance polynomiale, estimation saisonniere harmonique, puis ARIMA.
+          </p>
+          <div class="chart-wrap">
+            <canvas id="chart-project1" aria-label="Visualisation du projet 1"></canvas>
+          </div>
+          <p class="chart-note" id="stats-project1">Visualisation en chargement...</p>
+          <ul>
+            <li>Serie: Index de production pharmaceutique</li>
+            <li>Frequence: 12 (mensuelle)</li>
+            <li>Sortie finale: prevision sur 12 periodes</li>
+          </ul>
+          <div class="actions">
+            <a href="projet1-page.html" target="_blank" rel="noopener">Ouvrir la page du projet</a>
+            <a href="ProjetSerieTemporelleCopie.html" target="_blank" rel="noopener">Consulter le rapport complet</a>
+            <a href="projet1.rmd" target="_blank" rel="noopener">Voir le source Rmd</a>
+            <a href="USA.xlsx" target="_blank" rel="noopener">Donnees USA.xlsx</a>
+          </div>
+        </article>
+
+        <article class="project-card reveal" style="--delay: 0.25s">
+          <p class="tag">Projet 2</p>
+          <h3>Industrial Production - Semiconductors</h3>
+          <p>
+            Analyse de la serie FRED IPB53122N (debut 2009), choix d une decomposition
+            additive, retrait tendance/saisonnalite, puis modelisation ARMA.
+          </p>
+          <div class="chart-wrap">
+            <canvas id="chart-project2" aria-label="Visualisation du projet 2"></canvas>
+          </div>
+          <p class="chart-note" id="stats-project2">Visualisation en chargement...</p>
+          <ul>
+            <li>Serie: IPB53122N (Industrial Production)</li>
+            <li>Frequence: 12 (mensuelle)</li>
+            <li>Sortie finale: prevision sur 12 periodes</li>
+          </ul>
+          <div class="actions">
+            <a href="projet2-page.html" target="_blank" rel="noopener">Ouvrir la page du projet</a>
+            <a href="Projet2SerieTemporelle.html" target="_blank" rel="noopener">Consulter le rapport complet</a>
+            <a href="projet2.rmd" target="_blank" rel="noopener">Voir le source Rmd</a>
+            <a href="IndustrialProduction.xlsx" target="_blank" rel="noopener">Donnees IndustrialProduction.xlsx</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="files">
+      <div class="section-head reveal" style="--delay: 0.05s">
+        <p class="kicker">Ressources</p>
+        <h2>Fichiers de travail disponibles</h2>
+      </div>
+
+      <div class="files-panel reveal" style="--delay: 0.15s">
+        <a href="projet1-page.html" target="_blank" rel="noopener">projet1-page.html</a>
+        <a href="projet2-page.html" target="_blank" rel="noopener">projet2-page.html</a>
+        <a href="ProjetSerieTemporelleCopie.html" target="_blank" rel="noopener">ProjetSerieTemporelleCopie.html</a>
+        <a href="Projet2SerieTemporelle.html" target="_blank" rel="noopener">Projet2SerieTemporelle.html</a>
+        <a href="projet1.rmd" target="_blank" rel="noopener">projet1.rmd</a>
+        <a href="projet2.rmd" target="_blank" rel="noopener">projet2.rmd</a>
+        <a href="USA.xlsx" target="_blank" rel="noopener">USA.xlsx</a>
+        <a href="IndustrialProduction.xlsx" target="_blank" rel="noopener">IndustrialProduction.xlsx</a>
+        <a href="IndustrialProduction.txt" target="_blank" rel="noopener">IndustrialProduction.txt</a>
+        <a href="desc.txt" target="_blank" rel="noopener">desc.txt</a>
+        <a href="Activit%C3%A9%20Contr%C3%B4le%20Continu%204DS.pdf" target="_blank" rel="noopener">Activite Controle Continu 4DS.pdf</a>
+      </div>
+    </section>
+
+    <section class="section" id="about">
+      <div class="about-card reveal" style="--delay: 0.12s">
+        <p class="kicker">A propos</p>
+        <h2>Travaux de serie temporelle</h2>
+        <p>
+          Auteur: mohamedhediyedes.<br />
+          Ce mini-site sert de vitrine pour centraliser les deux projets,
+          simplifier la presentation, et faciliter l acces aux fichiers sources.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer reveal" style="--delay: 0.1s">
+    <p>Portfolio de projets de series temporelles</p>
+    <a href="#top">Retour en haut</a>
+  </footer>
+
+  <script src="project-data.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

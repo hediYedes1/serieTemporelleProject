@@ -1,177 +1,209 @@
-====================================================================
-  SYSTEME D'ANALYSE DE SERIES TEMPORELLES - PROJET
-====================================================================
+# 📈 Systeme d'Analyse de Series Temporelles
 
-Application de presentation web + rapports d'analyse R
-pour deux projets de series temporelles.
+![R](https://img.shields.io/badge/R-4.x-276DC3.svg)
+![R Markdown](https://img.shields.io/badge/R%20Markdown-Reports-75AADB.svg)
+![Frontend](https://img.shields.io/badge/Frontend-HTML%2FCSS%2FJS-0A1F1F.svg)
+![Python](https://img.shields.io/badge/Python-Optional%20(server)-3776AB.svg)
 
+Portfolio web local pour presenter deux projets complets de series temporelles, avec rapports HTML, sources R Markdown et donnees Excel.
 
-------------------------------
-  TABLE DES MATIERES
-------------------------------
-1. Apercu du projet
-2. Fichiers principaux
-3. Pre-requis
-4. Execution rapide (sans installation)
-5. Execution recommandee (serveur local)
-6. Consultation des rapports complets
-7. Modifier les analyses R (optionnel)
-8. Depannage rapide
-9. Resume des commandes utiles
+---
 
+## 📋 Table des Matieres
 
-====================================================================
-1) APERCU DU PROJET
-====================================================================
+- [Apercu du Projet](#apercu-du-projet)
+- [Fonctionnalites Principales](#fonctionnalites-principales)
+- [Architecture Technique](#architecture-technique)
+- [Projets Inclus](#projets-inclus)
+- [Installation](#installation)
+- [Utilisation](#utilisation)
+- [Structure du Projet](#structure-du-projet)
+- [Technologies Utilisees](#technologies-utilisees)
+- [Depannage Rapide](#depannage-rapide)
+
+---
+
+## 🎯 Apercu du Projet
 
 Ce dossier contient:
-- Un site web principal pour presenter les 2 projets.
-- Deux pages projet dediees.
-- Deux rapports HTML complets exportes depuis R Markdown.
-- Les fichiers sources Rmd et les jeux de donnees Excel.
 
+- Un site principal: [index.html](index.html)
+- Deux pages projet dediees:
+  - [projet1-page.html](projet1-page.html)
+  - [projet2-page.html](projet2-page.html)
+- Deux rapports complets exportes:
+  - [ProjetSerieTemporelleCopie.html](ProjetSerieTemporelleCopie.html)
+  - [Projet2SerieTemporelle.html](Projet2SerieTemporelle.html)
+- Les sources R Markdown:
+  - [projet1.rmd](projet1.rmd)
+  - [projet2.rmd](projet2.rmd)
+- Les donnees:
+  - [USA.xlsx](USA.xlsx)
+  - [IndustrialProduction.xlsx](IndustrialProduction.xlsx)
 
-====================================================================
-2) FICHIERS PRINCIPAUX
-====================================================================
+---
 
-[Site web]
-- index.html
-  Page d'accueil du site.
+## 🚀 Fonctionnalites Principales
 
-- projet1-page.html
-  Page detaillee du Projet 1 (rapport complet en iframe).
+### 1. Presentation Web Complete
+- Navigation entre Accueil, Projets, Fichiers, A propos
+- Boutons d'acces rapide vers les rapports et les sources
+- Retour arriere avec fleche de navigation sur les pages
 
-- projet2-page.html
-  Page detaillee du Projet 2 (rapport complet en iframe).
+### 2. Visualisation des Projets
+- Mini-graphiques integres sur la page d'accueil
+- Resume des statistiques (min, max, tendance)
+- Affichage complet des sorties analytiques dans les rapports HTML
 
-[Rapports]
-- ProjetSerieTemporelleCopie.html
-  Rapport complet du Projet 1.
+### 3. Double Niveau de Consultation
+- Niveau 1: vue portfolio rapide depuis [index.html](index.html)
+- Niveau 2: vue detaillee par projet avec iframe sur:
+  - [projet1-page.html](projet1-page.html)
+  - [projet2-page.html](projet2-page.html)
 
-- Projet2SerieTemporelle.html
-  Rapport complet du Projet 2.
+---
 
-[Sources]
-- projet1.rmd / projet2.rmd
-  Sources R Markdown des analyses.
+## 🏗️ Architecture Technique
 
-- USA.xlsx / IndustrialProduction.xlsx
-  Donnees des deux projets.
+### Stack
+- Analyse: R / R Markdown
+- Frontend: HTML, CSS, JavaScript
+- Donnees: Excel
+- Execution locale: navigateur direct ou serveur HTTP Python
 
-[Front-end]
-- style.css / script.js / project-data.js
-  Styles, logique front-end et donnees pour mini-graphiques.
+### Schema Global
 
+```text
+Browser
+  |
+  +--> index.html
+        |
+        +--> projet1-page.html --> ProjetSerieTemporelleCopie.html
+        +--> projet2-page.html --> Projet2SerieTemporelle.html
+        +--> USA.xlsx / IndustrialProduction.xlsx
+        +--> projet1.rmd / projet2.rmd
+```
 
-====================================================================
-3) PRE-REQUIS
-====================================================================
+---
 
-Execution du site:
-- Aucun prerequis obligatoire si tu ouvres les fichiers HTML directement.
-- Recommande: Python 3.x pour lancer un serveur local.
+## 📦 Projets Inclus
 
-Execution/modification des analyses R:
-- R (4.x recommande)
-- RStudio recommande pour "Knit" vers HTML
-- Packages R:
-  readxl, forecast, tseries, stats, knitr, rmarkdown
+### Projet 1 - Production pharmaceutique USA
+- Serie mensuelle (frequence 12)
+- Decomposition, tendance, saisonnalite, puis modelisation ARIMA
+- Rapport complet: [ProjetSerieTemporelleCopie.html](ProjetSerieTemporelleCopie.html)
 
+### Projet 2 - Industrial Production Semiconductors
+- Serie mensuelle FRED IPB53122N
+- Decomposition additive, ajustements tendance/saisonnalite, modelisation ARMA
+- Rapport complet: [Projet2SerieTemporelle.html](Projet2SerieTemporelle.html)
 
-====================================================================
-4) EXECUTION RAPIDE (SANS INSTALLATION)
-====================================================================
+---
 
-Option A - Ouvrir directement le site:
-1. Ouvre le dossier du projet.
-2. Double-clique sur index.html.
-3. Depuis la page d'accueil, clique sur:
-   - "Ouvrir la page du projet" (projet1-page.html / projet2-page.html)
-   - ou "Consulter le rapport complet".
+## 🛠️ Installation
 
+### Prerequis minimum
+- Aucun prerequis pour ouvrir les pages HTML directement
 
-====================================================================
-5) EXECUTION RECOMMANDEE (SERVEUR LOCAL)
-====================================================================
+### Prerequis recommandes
+- Python 3.x (pour serveur local)
+- R 4.x + RStudio (pour modifier/regenerer les rapports)
+- Packages R: readxl, forecast, tseries, stats, knitr, rmarkdown
 
-Option B - Lancer un serveur HTTP local (Windows PowerShell):
+Installation des packages R (optionnel):
 
-Etape 1 - Ouvrir PowerShell dans le dossier:
-  cd C:\Users\MSI\Desktop\projet
+```r
+install.packages(c("readxl", "forecast", "tseries", "knitr", "rmarkdown"))
+```
 
-Etape 2 - Lancer le serveur:
-  python -m http.server 8000
+---
 
-Etape 3 - Ouvrir le navigateur:
-  http://localhost:8000/index.html
+## 🎮 Utilisation
 
-Etape 4 - Arreter le serveur:
-  Ctrl + C
+### Option A - Ouverture directe
+1. Ouvrir [index.html](index.html) dans le navigateur.
+2. Utiliser les boutons Projets/Fichiers/A propos.
+3. Ouvrir les rapports complets via les liens dedies.
 
-Si la commande python ne fonctionne pas:
-  C:\Users\MSI\AppData\Local\Programs\Python\Python313\python.exe -m http.server 8000
+### Option B - Serveur local (recommande)
 
+```powershell
+cd C:\Users\MSI\Desktop\projet
+python -m http.server 8000
+```
 
-====================================================================
-6) COMMENT CONSULTER LES RAPPORTS COMPLETS
-====================================================================
+Puis ouvrir:
 
-Rapport Projet 1:
-- ProjetSerieTemporelleCopie.html
+```text
+http://localhost:8000/index.html
+```
 
-Rapport Projet 2:
-- Projet2SerieTemporelle.html
+Arret serveur:
 
-Depuis index.html, les boutons sont deja connectes vers ces rapports.
+```text
+Ctrl + C
+```
 
+Si `python` n'est pas reconnu:
 
-====================================================================
-7) MODIFIER LES ANALYSES R (OPTIONNEL)
-====================================================================
+```powershell
+C:\Users\MSI\AppData\Local\Programs\Python\Python313\python.exe -m http.server 8000
+```
 
-Si tu veux modifier projet1.rmd ou projet2.rmd:
+### Regenerer les rapports R (optionnel)
+1. Ouvrir [projet1.rmd](projet1.rmd) ou [projet2.rmd](projet2.rmd) dans RStudio.
+2. Cliquer sur Knit to HTML.
+3. Conserver les noms de sortie utilises par le site:
+   - `ProjetSerieTemporelleCopie.html`
+   - `Projet2SerieTemporelle.html`
 
-1. Ouvre le fichier dans RStudio.
-2. Clique sur "Knit" (Knit to HTML).
-3. Sauvegarde la sortie HTML en gardant ces noms:
-   - ProjetSerieTemporelleCopie.html
-   - Projet2SerieTemporelle.html
+---
 
-Remarque:
-- Le rendu en ligne de commande R peut demander Pandoc.
-- Avec RStudio, le rendu est generalement plus simple.
+## 📁 Structure du Projet
 
+```text
+projet/
+|-- index.html
+|-- style.css
+|-- script.js
+|-- project-data.js
+|-- projet1-page.html
+|-- projet2-page.html
+|-- ProjetSerieTemporelleCopie.html
+|-- Projet2SerieTemporelle.html
+|-- projet1.rmd
+|-- projet2.rmd
+|-- USA.xlsx
+|-- IndustrialProduction.xlsx
+|-- desc.txt
+|-- IndustrialProduction.txt
+`-- Activite Controle Continu 4DS.pdf
+```
 
-====================================================================
-8) DEPANNAGE RAPIDE
-====================================================================
+---
 
-Probleme: la page n'affiche pas les changements
-- Fais un rechargement force du navigateur: Ctrl + F5.
+## 🔧 Technologies Utilisees
 
-Probleme: le rapport ne s'affiche pas dans la page projet
-- Clique sur "Ouvrir le rapport dans un nouvel onglet".
+- R / R Markdown
+- HTML5 / CSS3 / JavaScript
+- Python (serveur local HTTP)
+- Excel (sources de donnees)
 
-Probleme: erreur "python non reconnu"
-- Verifie l'installation de Python.
-- Ou utilise le chemin complet indique dans la section 5.
+---
 
+## 🆘 Depannage Rapide
 
-====================================================================
-9) RESUME DES COMMANDES UTILES
-====================================================================
+Probleme: les changements n'apparaissent pas
+- Faire un hard refresh: `Ctrl + F5`
 
-Lancer le site local:
-  cd C:\Users\MSI\Desktop\projet
-  python -m http.server 8000
+Probleme: rapport non visible dans l'iframe
+- Utiliser le bouton "Ouvrir le rapport dans un nouvel onglet"
 
-URL du site:
-  http://localhost:8000/index.html
+Probleme: python non reconnu
+- Utiliser le chemin complet Python indique plus haut
 
-Arret du serveur:
-  Ctrl + C
+---
 
-====================================================================
-FIN
-====================================================================
+## 👤 Auteur
+
+Projet portfolio de series temporelles de `mohamedhediyedes`.

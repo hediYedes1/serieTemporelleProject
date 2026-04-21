@@ -74,6 +74,15 @@
   <div class="bg-orb orb-2" aria-hidden="true"></div>
   <div class="grid-overlay" aria-hidden="true"></div>
 
+  <button
+    class="back-arrow"
+    type="button"
+    aria-label="Revenir a la page precedente"
+    onclick="if (window.history.length > 1) { window.history.back(); } else { window.location.href='index.html#projects'; }"
+  >
+    ← Retour
+  </button>
+
   <main class="project-shell">
     <section class="project-top">
       <p class="kicker">Projet 2</p>
@@ -85,6 +94,9 @@
 
       <div class="top-actions">
         <a href="index.html">Retour accueil</a>
+        <a href="index.html#projects">Projets</a>
+        <a href="index.html#files">Fichiers</a>
+        <a href="index.html#about">A propos</a>
         <a href="Projet2SerieTemporelle.html" target="_blank" rel="noopener">Ouvrir le rapport dans un nouvel onglet</a>
         <a href="projet2.rmd" target="_blank" rel="noopener">Voir le source Rmd</a>
         <a href="IndustrialProduction.xlsx" target="_blank" rel="noopener">Telecharger les donnees</a>

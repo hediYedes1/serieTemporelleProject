@@ -14,6 +14,15 @@
   <div class="bg-orb orb-2" aria-hidden="true"></div>
   <div class="grid-overlay" aria-hidden="true"></div>
 
+  <button
+    class="back-arrow"
+    type="button"
+    aria-label="Revenir a la page precedente"
+    onclick="if (window.history.length > 1) { window.history.back(); } else { window.location.href='index.html#top'; }"
+  >
+    ← Retour
+  </button>
+
   <header class="hero" id="top">
     <nav class="top-nav">
       <a class="logo" href="#top">Data TimeLab</a>
